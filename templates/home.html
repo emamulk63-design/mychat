@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মাই চ্যাট</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 500px;
+            margin: auto;
+            background: #f0f4ff;
+        }
+        h2 {
+            color: #333;
+        }
+        .user-list {
+            list-style: none;
+            padding: 0;
+        }
+        .user-list li {
+            padding: 15px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .user-list a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .user-list a:hover {
+            text-decoration: underline;
+        }
+        a {
+            color: red;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>👋 হ্যালো, {{ user.username }}!</h2>
+    <a href="{% url 'logout' %}">লগআউট</a>
+    
+    <h3>📱 অন্যান্য ইউজার:</h3>
+    <ul class="user-list">
+        {% for user in users %}
+            <li><a href="{% url 'chat' username=user.username %}">{{ user.username }}</a></li>
+        {% empty %}
+            <li>😴 এখনো অন্য কেউ যোগ দেয়নি</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
