@@ -1,55 +1,213 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মাই চ্যাট</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            max-width: 500px;
-            margin: auto;
-            background: #f0f4ff;
-        }
-        h2 {
-            color: #333;
-        }
-        .user-list {
-            list-style: none;
-            padding: 0;
-        }
-        .user-list li {
-            padding: 15px;
-            margin: 5px 0;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .user-list a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-        }
-        .user-list a:hover {
-            text-decoration: underline;
-        }
-        a {
-            color: red;
-            text-decoration: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Messenger</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f0f2f5;
+}
+
+.header{
+background:#0084ff;
+color:white;
+padding:18px;
+font-size:22px;
+font-weight:bold;
+text-align:center;
+position:sticky;
+top:0;
+}
+
+.search{
+padding:12px;
+background:white;
+}
+
+.search input{
+width:100%;
+padding:12px;
+border:none;
+border-radius:30px;
+background:#f1f1f1;
+font-size:16px;
+outline:none;
+}
+
+.chat-list{
+padding:8px;
+}
+
+.chat-item{
+display:flex;
+align-items:center;
+padding:12px;
+background:white;
+border-radius:14px;
+margin-bottom:10px;
+text-decoration:none;
+color:black;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.avatar{
+width:58px;
+height:58px;
+border-radius:50%;
+background:#0084ff;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:24px;
+font-weight:bold;
+margin-right:12px;
+flex-shrink:0;
+}
+
+.info{
+flex:1;
+overflow:hidden;
+}
+
+.name{
+font-size:18px;
+font-weight:bold;
+}
+
+.last{
+font-size:14px;
+color:#666;
+margin-top:4px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.right{
+display:flex;
+flex-direction:column;
+align-items:flex-end;
+}
+
+.time{
+font-size:12px;
+color:#888;
+margin-bottom:6px;
+}
+
+.badge{
+background:#0084ff;
+color:white;
+width:24px;
+height:24px;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:12px;
+font-weight:bold;
+}
+
+.empty{
+text-align:center;
+padding:40px;
+color:gray;
+}
+
+</style>
 </head>
+
 <body>
-    <h2>👋 হ্যালো, {{ user.username }}!</h2>
-    <a href="{% url 'logout' %}">লগআউট</a>
-    
-    <h3>📱 অন্যান্য ইউজার:</h3>
-    <ul class="user-list">
-        {% for user in users %}
-            <li><a href="{% url 'chat' username=user.username %}">{{ user.username }}</a></li>
-        {% empty %}
-            <li>😴 এখনো অন্য কেউ যোগ দেয়নি</li>
-        {% endfor %}
-    </ul>
+
+<div class="header">
+💬 Messenger
+</div>
+
+<div class="search">
+<input type="text" placeholder="Search...">
+</div>
+
+<div class="chat-list">
+
+{% for chat in chat_list %}
+
+<a href="{% url 'chat' chat.user.username %}" class="chat-item">
+
+<div class="avatar">
+{{ chat.user.username|first|upper }}
+</div>
+
+<div class="info">
+
+<div class="name">
+{{ chat.user.username }}
+</div>{% if chat.last_message %}
+
+<div class="last">
+
+{% if chat.last_message.sender == request.user %}
+You:
+{% endif %}
+
+{{ chat.last_message.text }}
+
+</div>
+
+{% else %}
+
+<div class="last">
+কোনো মেসেজ নেই
+</div>
+
+{% endif %}
+
+</div>
+
+<div class="right">
+
+{% if chat.last_message %}
+
+<div class="time">
+{{ chat.last_message.timestamp|date:"g:i A" }}
+</div>
+
+{% endif %}
+
+{% if chat.unread > 0 %}
+
+<div class="badge">
+{{ chat.unread }}
+</div>
+
+{% endif %}
+
+</div>
+
+</a>
+
+{% empty %}
+
+<div class="empty">
+
+কোনো ইউজার পাওয়া যায়নি
+
+</div>
+
+{% endfor %}
+
+</div>
+
 </body>
 </html>
