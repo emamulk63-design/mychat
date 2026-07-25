@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 
 from .models import Message
+from accounts.models import Profile
 
 
 @login_required
@@ -14,6 +15,8 @@ def home(request):
     chat_list = []
 
     for user in users:
+
+        profile, created = Profile.objects.get_or_create(user=user)
 
         last_message = Message.objects.filter(
             Q(sender=request.user, receiver=user) |
@@ -28,6 +31,7 @@ def home(request):
 
         chat_list.append({
             "user": user,
+            "profile": profile,
             "last_message": last_message,
             "unread": unread,
         })
@@ -37,15 +41,21 @@ def home(request):
         reverse=True
     )
 
-    return render(request, "home.html", {
-        "chat_list": chat_list
-    })
+    return render(
+        request,
+        "home.html",
+        {
+            "chat_list": chat_list
+        }
+    )
 
 
 @login_required
 def chat_view(request, username):
 
     receiver = get_object_or_404(User, username=username)
+
+    Profile.objects.get_or_create(user=receiver)
 
     messages = Message.objects.filter(
         Q(sender=request.user, receiver=receiver) |
@@ -71,7 +81,11 @@ def chat_view(request, username):
 
         return redirect("chat", username=username)
 
-    return render(request, "chat.html", {
-        "receiver": receiver,
-        "messages": messages,
-    })
+    return render(
+        request,
+        "chat.html",
+        {
+            "receiver": receiver,
+            "messages": messages,
+        }
+    )

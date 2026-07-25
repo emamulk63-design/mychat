@@ -30,6 +30,33 @@ position:sticky;
 top:0;
 }
 
+/* ✅ নতুন স্টাইল যোগ করা হলো */
+.profile-actions{
+background:white;
+padding:12px;
+text-align:right;
+border-bottom:1px solid #ddd;
+}
+
+.profile-actions a{
+padding:10px 15px;
+border-radius:8px;
+text-decoration:none;
+font-weight:bold;
+display:inline-block;
+}
+
+.btn-edit{
+background:#0084ff;
+color:white;
+}
+
+.btn-logout{
+background:#dc3545;
+color:white;
+margin-left:8px;
+}
+
 .search{
 padding:12px;
 background:white;
@@ -58,8 +85,7 @@ border-radius:14px;
 margin-bottom:10px;
 text-decoration:none;
 color:black;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
+box-shadow:0 2px 8px rgba(0,0,0,.08);}
 
 .avatar{
 width:58px;
@@ -117,8 +143,7 @@ display:flex;
 justify-content:center;
 align-items:center;
 font-size:12px;
-font-weight:bold;
-}
+font-weight:bold;}
 
 .empty{
 text-align:center;
@@ -135,6 +160,12 @@ color:gray;
 💬 Messenger
 </div>
 
+<!-- ✅ এখানে নতুন কোড যোগ করা হলো -->
+<div class="profile-actions">
+    <a href="{% url 'edit_profile' %}" class="btn-edit">👤 Edit Profile</a>
+    <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
+</div>
+
 <div class="search">
 <input type="text" placeholder="Search...">
 </div>
@@ -146,7 +177,23 @@ color:gray;
 <a href="{% url 'chat' chat.user.username %}" class="chat-item">
 
 <div class="avatar">
+
+{% if chat.profile.image %}
+<img
+    src="{{ chat.profile.image.url }}"
+    alt="Profile"
+    style="
+        width:58px;
+        height:58px;
+        border-radius:50%;
+        object-fit:cover;
+    ">
+{% else %}
+
 {{ chat.user.username|first|upper }}
+
+{% endif %}
+
 </div>
 
 <div class="info">
@@ -177,9 +224,7 @@ You:
 
 <div class="right">
 
-{% if chat.last_message %}
-
-<div class="time">
+{% if chat.last_message %}<div class="time">
 {{ chat.last_message.timestamp|date:"g:i A" }}
 </div>
 
