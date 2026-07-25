@@ -26,7 +26,7 @@ def home(request):
         unread = Message.objects.filter(
             sender=user,
             receiver=request.user,
-            is_seen=False
+            is_read=False
         ).count()
 
         chat_list.append({
@@ -65,8 +65,8 @@ def chat_view(request, username):
     Message.objects.filter(
         sender=receiver,
         receiver=request.user,
-        is_seen=False
-    ).update(is_seen=True)
+        is_read=False
+    ).update(is_read=True)
 
     if request.method == "POST":
 
