@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f0f2f5;
+}
+
+.header{
+background:#0084ff;
+color:#fff;
+padding:18px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+
+.cards{
+display:flex;
+gap:15px;
+padding:15px;
+flex-wrap:wrap;
+}
+
+.card{
+flex:1;
+min-width:160px;
+background:#fff;
+border-radius:12px;
+padding:20px;
+text-align:center;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+.card h2{
+font-size:32px;
+color:#0084ff;
+margin-bottom:8px;
+}
+
+.section{
+padding:15px;
+}
+
+.title{
+font-size:20px;
+font-weight:bold;
+margin-bottom:12px;
+}
+
+.user{
+display:flex;
+align-items:center;
+background:#fff;
+padding:12px;
+border-radius:12px;
+margin-bottom:10px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.user img{
+width:55px;
+height:55px;
+border-radius:50%;
+margin-right:12px;
+object-fit:cover;
+}
+
+.avatar{
+width:55px;
+height:55px;
+border-radius:50%;
+background:#0084ff;
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+font-weight:bold;
+margin-right:12px;
+}
+
+.info{
+flex:1;
+}
+
+.name{
+font-size:18px;
+font-weight:bold;
+}
+
+.bio{
+font-size:14px;
+color:#666;
+margin-top:4px;
+}
+
+.msg{
+background:#fff;
+padding:12px;
+border-radius:12px;
+margin-bottom:10px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.msg b{
+color:#0084ff;
+}
+</style>
+
+</head>
+<body>
+
+<div class="header">
+📊 Messenger Admin Dashboard
+</div>
+
+<div class="cards">
+
+<div class="card">
+<h2>{{ total_users }}</h2>
+<p>Total Users</p>
+</div>
+
+<div class="card">
+<h2>{{ total_messages }}</h2>
+<p>Total Messages</p>
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="title">
+👥 Users
+</div>
+
+{% for profile in profiles %}
+
+<div class="user">
+
+{% if profile.image %}
+<img src="{{ profile.image.url }}">
+{% else %}
+<div class="avatar">
+{{ profile.user.username|first|upper }}
+</div>
+{% endif %}
+
+<div class="info">
+<div class="name">
+{{ profile.user.username }}
+</div>
+
+<div class="bio">
+{{ profile.bio }}
+</div>
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<div class="section">
+
+<div class="title">
+💬 Recent Messages
+</div>
+
+{% for msg in messages %}
+
+<div class="msg">
+
+<b>{{ msg.sender }}</b>
+➡
+<b>{{ msg.receiver }}</b>
+
+<br><br>
+
+{{ msg.text }}
+
+</div>
+
+{% empty %}
+
+<div class="msg">
+No messages
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

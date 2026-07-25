@@ -89,3 +89,21 @@ def chat_view(request, username):
             "messages": messages,
         }
     )
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.models import User
+from accounts.models import Profile
+from .models import Message
+
+@staff_member_required
+def admin_dashboard(request):
+    users = User.objects.all()
+    profiles = Profile.objects.all()
+    messages = Message.objects.all().order_by("-timestamp")
+
+    return render(request, "admin_dashboard.html", {
+        "users": users,
+        "profiles": profiles,
+        "messages": messages,
+        "total_users": users.count(),
+        "total_messages": messages.count(),
+    })
